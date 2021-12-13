@@ -7,6 +7,7 @@ import spring.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 @Repository
@@ -15,28 +16,10 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-
-//    private static int USER_COUNT;
-//    private List<User> users;
-//    {
-//        users = new ArrayList<>();
-//
-//        users.add(new User(++USER_COUNT, "Ivan", "Pupkinn", "pupkin@bk.ru"));
-//        users.add(new User(++USER_COUNT, "Inna", "Orechova", "oreshek@mail.ru"));
-//        users.add(new User(++USER_COUNT, "Kolyan", "Mudryi", "chuvak@gmail.com"));
-//        users.add(new User(++USER_COUNT, "Sem", "Jons", "1245qwerty@ya.ru"));
-//    }
-//    public List<User> index(){
-//        return users;
-//    }
-//    public User show(int id){
-//        return users.stream().filter(users -> users.getId() == id).findAny().orElse(null);
-//    }
-
     @Override
-    @SuppressWarnings("unchecked")
-    public List<User> listUsers() {
-        return entityManager.createQuery("from User").getResultList();
+    @Transactional
+    public List<User> allUsers() {
+        return entityManager.createQuery("FROM User", User.class).getResultList();
     }
 
     @Override

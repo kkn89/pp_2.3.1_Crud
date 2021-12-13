@@ -5,7 +5,7 @@ import spring.model.User;
 import java.util.List;
 
 public interface UserServise {
-    List<User> listUsers();
+    List<User> allUsers();
 
     void saveUser(User user);
 
@@ -14,4 +14,5 @@ public interface UserServise {
     void update(User user);
 
     void delete(int id);
+
 }

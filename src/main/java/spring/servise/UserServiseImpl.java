@@ -18,8 +18,8 @@ public class UserServiseImpl implements UserServise {
 
     @Override
     @Transactional
-    public List<User> listUsers() {
-        return userDao.listUsers();
+    public List<User> allUsers() {
+        return userDao.allUsers();
     }
 
     @Override

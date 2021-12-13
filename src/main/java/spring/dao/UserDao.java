@@ -5,7 +5,7 @@ import spring.model.User;
 import java.util.List;
 
 public interface UserDao {
-    List<User> listUsers();
+    List<User> allUsers();
 
     void saveUser(User user);
 

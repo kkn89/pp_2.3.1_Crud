@@ -1,8 +1,9 @@
 package spring.model;
 
 import javax.persistence.*;
+
 @Entity
-@Table(name = "users_table")
+@Table(name = "user_table")
 public class User {
 
     @Id
@@ -19,16 +20,17 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    public User(int id, String firstName, String lastName, String email) {
-        this.id = id;
+    public User() {
+
+    }
+
+    public User(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public User() {
 
-    }
 
     public int getId() {
         return id;
@@ -60,5 +62,15 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

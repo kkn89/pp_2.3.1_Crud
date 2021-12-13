@@ -1,28 +1,32 @@
 package spring.config;
 
-import spring.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
-import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
+@EnableJpaRepositories
 @PropertySource("classpath:db.properties")
-
+@EnableTransactionManagement
 @ComponentScan(value = "spring")
 public class HibernateConfig {
+
 
     private final Environment env;
 
@@ -32,42 +36,44 @@ public class HibernateConfig {
     }
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource getDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUsername("root");
-        dataSource.setPassword("root");
-        dataSource.setUrl(
-                "jdbc:mysql://localhost:3306/crud_v1?createDatabaseIfNotExist=true");
-
+        dataSource.setDriverClassName(env.getProperty("db.driver"));
+        dataSource.setUrl(env.getProperty("db.url"));
+        dataSource.setUsername(env.getProperty("db.username"));
+        dataSource.setPassword(env.getProperty("db.password"));
         return dataSource;
     }
 
-    @Configuration
-    @EnableTransactionManagement
-    public class PersistenceJPAConfig {
+    @Bean
+    public JpaTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        return transactionManager;
+    }
 
-        @Bean
-        public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-            LocalContainerEntityManagerFactoryBean em
-                    = new LocalContainerEntityManagerFactoryBean();
-            em.setDataSource(dataSource());
-            em.setPackagesToScan(new String[]{"spring.model"});
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean lemf
+                = new LocalContainerEntityManagerFactoryBean();
+        lemf.setDataSource(getDataSource());
+        lemf.setPackagesToScan(new String[]{"spring.model"}); //сканирование тех папок, где находятся энтити
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        lemf.setJpaVendorAdapter(vendorAdapter);
+        lemf.setJpaProperties(additionalProperties()); //добавление настроек hibernate
+        return lemf;
+    }
 
-            JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-            em.setJpaVendorAdapter(vendorAdapter);
-            em.setJpaProperties(additionalProperties());
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
 
-            return em;
-        }
-
-        private Properties additionalProperties() {
-            Properties properties = new Properties();
-            properties.setProperty("hibernate.hbm2ddl.auto", "update");
-            properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-            properties.setProperty("hibernate.show_sql", "true");
-            return properties;
-
-        }
+    Properties additionalProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        properties.setProperty("hibernate.show_sql", "true");
+        return properties;
     }
 }

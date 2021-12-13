@@ -1,5 +1,6 @@
 package spring.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +14,15 @@ import java.util.List;
 public class UserController {
   private final UserServise userServise;
 
+    @Autowired
     public UserController(UserServise userServise) {
         this.userServise = userServise;
     }
 
     @GetMapping("/")
-    public String showAllUser(Model model) {
-        List<User> allUsers = userServise.listUsers();
-        model.addAttribute("allUser",allUsers);
-        return "allUser";
+    public String allUsers(Model model) {
+        model.addAttribute("allUs",userServise.allUsers());
+        return "all-user";
     }
 
     @GetMapping("/new")
