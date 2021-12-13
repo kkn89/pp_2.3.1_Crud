@@ -57,10 +57,10 @@ public class HibernateConfig {
         LocalContainerEntityManagerFactoryBean lemf
                 = new LocalContainerEntityManagerFactoryBean();
         lemf.setDataSource(getDataSource());
-        lemf.setPackagesToScan(new String[]{"spring.model"}); //сканирование тех папок, где находятся энтити
+        lemf.setPackagesToScan(new String[]{"spring.model"});
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         lemf.setJpaVendorAdapter(vendorAdapter);
-        lemf.setJpaProperties(additionalProperties()); //добавление настроек hibernate
+        lemf.setJpaProperties(additionalProperties());
         return lemf;
     }
 

@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:c="http://java.sun.com/xml/ns/javaee">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
 </head>
 <body>
-<h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Table of Users
+<h1>Table of Users
 </h1>
 <table border="1" cellpadding="7">
     <tr>
         <th> Id</th>
-        <th> Name</th>
+        <th> First Name</th>
         <th> Last Name</th>
         <th> Email</th>
         <th> Update User</th>
@@ -24,7 +22,11 @@
         <td th:utext="${user.getFirstName()}"></td>
         <td th:utext="${user.getLastName()}"></td>
         <td th:utext="${user.getEmail()}"></td>
-        <td><a th:href="@{/edit/{id}(id=${user.getId()})}">Update</a></td>
+             <td>
+            <form th:method="UPDATE" th:action="@{/update/{id}(id=${user.getId()})}">
+                <input type="submit" value="Update">
+            </form>
+        </td>
         <td>
             <form th:method="DELETE" th:action="@{/delete/{id}(id=${user.getId()})}">
                 <input type="submit" value="Delete">
