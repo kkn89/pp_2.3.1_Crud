@@ -3,6 +3,7 @@ package spring.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import spring.dao.UserDao;
 import spring.model.User;
@@ -11,6 +12,7 @@ import spring.servise.UserServise;
 import java.util.List;
 
 @Controller
+@RequestMapping("/")
 public class UserController {
   private final UserServise userServise;
 
@@ -19,7 +21,7 @@ public class UserController {
         this.userServise = userServise;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String allUsers(Model model) {
         model.addAttribute("allUs",userServise.allUsers());
         return "all-user";
@@ -41,8 +43,9 @@ public class UserController {
     }
 
     @PatchMapping("/edit/{id}")
-    public String editUser(@ModelAttribute User user) {
-        userServise.update(user);
+    public String update(@ModelAttribute("user") User user,
+                           @PathVariable("id") int id) {
+        userServise.update(id, user);
         return "redirect:/";
     }
 

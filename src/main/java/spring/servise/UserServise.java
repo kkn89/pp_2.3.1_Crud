@@ -11,7 +11,7 @@ public interface UserServise {
 
     User getById(int id);
 
-    void update(User user);
+    void update(int id,User updatedUser);
 
     void delete(int id);
 

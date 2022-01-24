@@ -37,8 +37,8 @@ public class UserServiseImpl implements UserServise {
 
     @Override
     @Transactional
-    public void update(User user) {
-        userDao.update(user);
+    public void update(int id, User updatedUser) {
+        userDao.update(id,updatedUser);
 
     }
 
